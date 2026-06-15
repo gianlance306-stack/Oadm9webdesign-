@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Louis Albert L. Gallego (@LOKI) / X</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            padding-bottom: 70px;
+        }
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            border-bottom: 1px solid #e1e8ed;
+            z-index: 100;
+        }
+        .back-btn {
+            font-size: 1.3rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
+        }
+        .top-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .search-icon {
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+        /* Cover Photo */
+        .banner {
+            height: 120px;
+            background-color: #e1e8ed;
+            position: relative;
+            overflow: hidden;
+        }
+        .banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .change-cover-btn {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+        #coverInput { display: none; }
+        /* Profile Header */
+        .profile-header {
+            padding: 0 1rem;
+            position: relative;
+            margin-top: -4rem;
+        }
+        .profile-pic {
+            width: clamp(100px, 25vw, 120px);
+            height: clamp(100px, 25vw, 120px);
+            border-radius: 50%;
+            border: 4px solid #fff;
+            background: #e1e8ed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .setup-btn {
+            position: absolute;
+            top: 0;
+            right: 1rem;
+            border: 1px solid #ccd6dd;
+            background: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .profile-name {
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.2rem;
+        }
+        .verified-badge {
+            background: #1da1f2;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+        }
+        .username, .contact {
+            color: #657786;
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+        .stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .stats span { font-weight: 600; }
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e1e8ed;
+            overflow-x: auto;
+        }
+        .tab {
+            flex: 0 0 auto;
+            min-width: 75px;
+            padding: 1rem 0.6rem;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            color: #657786;
+            cursor: pointer;
+            text-align: center;
+        }
+        .tab.active {
+            color: #000;
+            font-weight: 600;
+            border-bottom: 3px solid #1da1f2;
+        }
+        /* Content Sections */
+        .content-area { padding: 1rem; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        /* Post Style */
+        .post {
+            border: 1px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.8rem;
+        }
+        .post-profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e1e8ed;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .post-profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .post-user-info h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .post-user-info p {
+            font-size: 0.85rem;
+            color: #657786;
+        }
+        .post-caption {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+            color: #000;
+        }
+        .post-image {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.8rem;
+            background: #e1e8ed;
+            text-align: center;
+        }
+        .post-image img {
+            max-width: 350px;
+            max-height: 350px;
+            width: 100%;
+            height: auto;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .post-actions {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: #657786;
+        }
+        /* Rants Style */
+        .rant {
+            border: 1px solid #ffebee;
+            background: #fff8f9;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .rant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+            color: #1da1f2;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .rant-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #333;
+        }
+        /* Only Me Style */
+        .only-me-box {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #657786;
+        }
+        .only-me-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+        /* About Me, Media, Others */
+        .about-content { line-height: 1.8; font-size: 1rem; color: #333; }
+        .about-content h3 { font-size: 1.1rem; font-weight: 700; margin: 1.2rem 0 0.5rem; color: #000; }
+        .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 0.5rem; }
+        .media-item { aspect-ratio: 1/1; background: #e1e8ed; overflow: hidden; cursor: pointer; }
+        .media-item img { width: 100%; height: 100%; object-fit: cover; }
+        .setup-cards { display: flex; gap: 0.75rem; margin: 1rem 0 2rem; overflow-x: auto; }
+        .card { min-width: 140px; height: 120px; border-radius: 12px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 600; text-align: center; padding: 0.5rem; }
+        .card.blue { background: linear-gradient(135deg, #0099cc, #33ccff); }
+        .card.orange { background: linear-gradient(135deg, #ff9933, #ffcc33); }
+        .card.purple { background: linear-gradient(135deg, #9966ff, #cc66ff); }
+        .who-to-follow h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+        .suggestion { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid #e1e8ed; }
+        .suggestion-pic { width: 48px; height: 48px; border-radius: 50%; background: #e1e8ed; overflow: hidden; cursor: pointer; flex-shrink: 0; }
+        .suggestion-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .suggestion-info { flex: 1; }
+        .suggestion-name { font-weight: 700; font-size: 0.95rem; }
+        .suggestion-username { font-size: 0.9rem; color: #657786; margin: 0.2rem 0; }
+        .suggestion-bio { font-size: 0.85rem; color: #333; line-height: 1.4; }
+        .follow-btn { background: #000; color: #fff; border: none; padding: 0.5rem 1.1rem; border-radius: 9999px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid #e1e8ed;
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem 0;
+        }
+        .nav-icon { font-size: 1.4rem; cursor: pointer; position: relative; }
+        .badge { position: absolute; top: -5px; right: -8px; background: #1da1f2; color: white; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 9999px; }
+        .tweet-btn { position: fixed; bottom: 5rem; right: 1rem; width: 55px; height: 55px; border-radius: 50%; background: #1da1f2; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        /* Zoom Modal */
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); padding: 1rem; }
+        .modal-content { margin: auto; display: block; max-width: 90%; max-height: 90vh; object-fit: contain; }
+        .close { position: absolute; top: 1rem; right: 1.5rem; color: #fff; font-size: 2.5rem; font-weight: bold; cursor: pointer; }
+        @media (max-width: 480px) { .setup-btn { position: static; margin: 0.5rem 0; width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="X_Password.html" class="back-btn">←</a>
+        <div class="top-title" id="pageTitle">Posts</div>
+        <div class="search-icon">🔍</div>
+    </div>
+
+    <!-- Cover Photo -->
+    <div class="banner" id="coverContainer">
+        <img id="coverImage" src="cover.jpg" alt="Cover Photo">
+        <button class="change-cover-btn" onclick="triggerCoverUpload()">Change cover</button>
+        <input type="file" id="coverInput" accept="image/*">
+    </div>
+
+    <!-- Profile Header -->
+<div class="profile-header">
+    <div class="profile-pic" onclick="openZoom('L7.jpg')">
+        <img src="L7.jpg" alt="Profile Picture">
+    </div>
+    <button class="setup-btn" id="setupBtn">Set up profile</button>
+    
+    <div class="profile-name">
+        Louis Albert L. Gallego
+        <span class="verified-badge" id="verifyBtn">Get verified</span>
+    </div>
+    <div class="username">@lokiloks23</div>
+    <div class="contact">- BSOA - 2B</div>
+    <div class="contact">- 09771047479</div>
+    <div class="contact">- vulnerable</div>
+
+    <!-- 🎵 Styled Audio Player -->
+    <div style="margin: 1rem 0; padding: 0.6rem 0.8rem; background: #f7f9fa; border-radius: 9999px; border: 1px solid #e1e8ed;">
+        <p style="font-size: 0.85rem; color: #657786; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem;">
+            🎧 Now Playing
+        </p>
+        <audio src="1.mp3" id="bgMusic" loop controls style="width: 100%; height: 32px; outline: none;">
+            Your browser does not support audio playback.
+        
+    </div>
+
+    <div class="stats">
+        <div><span>1</span> Following</div>
+        <div><span>2M</span> Followers</div>
+    </div>
+</div>
+
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" data-tab="posts">Posts</div>
+        <div class="tab" data-tab="replies">Replies</div>
+        <div class="tab" data-tab="rants">Rants</div>
+        <div class="tab" data-tab="about">About Me</div>
+        <div class="tab" data-tab="media">Media</div>
+        <div class="tab" data-tab="onlyme">Only Me</div>
+    </div>
+
+    <div class="content-area">
+
+        <!-- ✅ POSTS TAB -->
+        <div class="content-section active" id="posts-content">
+            <!-- POST 1 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="L7.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>📌 Louis Albert</h4>
+                        <p>@LOKI · 1h</p>
+                    </div>
+                </div>
+                <p class="post-caption"><strong>Why Office Administration?</strong></p>
+                <p class="post-caption">"I chose Office Administration because it is the heart of every successful organization. It equips me with practical, versatile skills to manage records, communications, and daily operations efficiently. This field offers stable career opportunities across many industries, and it serves as a strong foundation for growth — whether I work in a company, serve in the government, or start my own business in the future."</p>
+                <div class="post-actions">
+                    <span>💬 43.8k</span>
+                    <span>🔁 11.8k</span>
+                    <span>❤️ 82k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+            <!-- POST 2 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="L7.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Louis Albert</h4>
+                        <p>@LOKI · 1h</p>
+                    </div>
+                </div>
+                <p class="post-caption">✨ Life is good with music</p>
+                <div class="post-image" onclick="openZoom('L6.jpg')">
+                    <img src="L6.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 53.8k</span>
+                    <span>🔁 11.8k</span>
+                    <span>❤️ 92k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+            <!-- POST 3 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="L7.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Louis Albert</h4>
+                        <p>@LOKI · 3h</p>
+                    </div>
+                </div>
+                <p class="post-caption">☀️ Summer vibe</p>
+                <div class="post-image" onclick="openZoom('L1.jpg')">
+                    <img src="L1.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 55.9k</span>
+                    <span>🔁 42k</span>
+                    <span>❤️ 110.2k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+            <div class="post">
+    <div class="post-header">
+        <div class="post-profile-pic">
+            <img src="L7.jpg" alt="Profile">
+        </div>
+        <div class="post-user-info">
+            <h4>Louis Albert</h4>
+            <p>@LOKI · 1d</p>
+        </div>
+    </div>
+    <p class="post-caption">🎥 New profile look</p>
+    <div class="post-image" onclick="openZoom('2.mp4')">
+        <video src="2.mp4" alt="Post video" controls muted loop playsinline style="width: 100%; height: auto; border-radius: 8px;">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="post-actions">
+        <span>💬 54.9k</span>
+        <span>🔁 34.4k</span>
+        <span>❤️ 89.8k</span>
+        <span>📤</span>
+    </div>
+</div>
+
+            
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="L7.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Louis Albert</h4>
+                        <p>@LOKI · 1d</p>
+                    </div>
+                </div>
+                <p class="post-caption">💌 Date?</p>
+                <div class="post-image" onclick="openZoom('L9.jpg')">
+                    <img src="L9.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 82.9k</span>
+                    <span>🔁 22.4k</span>
+                    <span>❤️ 49.1k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+            <div class="post">
+    <div class="post-header">
+        <div class="post-profile-pic">
+            <img src="L7.jpg" alt="Profile">
+        </div>
+        <div class="post-user-info">
+            <h4>Louis Albert</h4>
+            <p>@LOKI · 1d</p>
+        </div>
+    </div>
+    <p class="post-caption"> No caption</p>
+    <div class="post-image" onclick="openZoom('1.mp4')">
+        <video src="1.mp4" alt="Post video" controls muted loop playsinline style="width: 100%; height: auto; border-radius: 8px;">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="post-actions">
+        <span>💬 54.9k</span>
+        <span>🔁 34.4k</span>
+        <span>❤️ 89.8k</span>
+        <span>📤</span>
+    </div>
+</div>
+
+
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="L7.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Louis Albert</h4>
+                        <p>@LOKI · 1d</p>
+                    </div>
+                </div>
+                <p class="post-caption">🪞 Mirror selfie</p>
+                <div class="post-image" onclick="openZoom('L8.jpg')">
+                    <img src="L8.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 42.9k</span>
+                    <span>🔁 36.4k</span>
+                    <span>❤️ 84.5k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="L7.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Louis Albert</h4>
+                        <p>@LOKI · 1d</p>
+                    </div>
+                </div>
+                <p class="post-caption">👤 New profile look</p>
+                <div class="post-image" onclick="openZoom('L7.jpg')">
+                    <img src="L7.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 54.9k</span>
+                    <span>🔁 34.4k</span>
+                    <span>❤️ 89.8k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+            <div class="post">
+    <div class="post-header">
+        <div class="post-profile-pic">
+            <img src="L7.jpg" alt="Profile">
+        </div>
+        <div class="post-user-info">
+            <h4>Louis Albert</h4>
+            <p>@LOKI · 1d</p>
+        </div>
+    </div>
+    <p class="post-caption">🎥 Di na drawing</p>
+    <div class="post-image" onclick="openZoom('L69.mp4')">
+        <video src="L69.mp4" alt="Post video" controls muted loop playsinline style="width: 100%; height: auto; border-radius: 8px;">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="post-actions">
+        <span>💬 654.9k</span>
+        <span>🔁 104.4k</span>
+        <span>❤️ 500.8k</span>
+        <span>📤</span>
+    </div>
+</div>
+
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="L7.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Louis Albert</h4>
+                        <p>@LOKI · 1d</p>
+                    </div>
+                </div>
+                <p class="post-caption">To love nature is to embrace the quiet poetry of the earth—the soft whisper of the wind through the trees, the gentle murmur of flowing streams, and the golden glow of sunlight filtering through leaves. It is finding peace in the rhythm of the seasons, marveling at the delicate bloom of a flower and the vast beauty of starlit skies. This love awakens the soul, reminding us that we are part of something far greater, teaching us humility, gratitude, and the gentle wisdom to cherish and protect the living world that nourishes our hearts and gives us life.</p>
+                <div class="post-actions">
+                    <span>💬 64.8k</span>
+                    <span>🔁 24.3k</span>
+                    <span>❤️ 79.2k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="L7.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Louis Albert</h4>
+                        <p>@LOKI · 1d</p>
+                    </div>
+                </div>
+    <p class="post-caption">Choosing Office Administration is a great decision because it offers versatile, in-demand skills needed across all industries, providing stable job opportunities and clear career growth. Personally, it develops your discipline, responsibility, communication, patience, attention to detail, problem-solving ability, and integrity. Professionally, it equips you with essential office and technical competencies, improves your organizational and teamwork skills, builds a strong work ethic, and prepares you for leadership and advancement in any organization.</p>
+                 <div class="post-actions">
+                     <span>💬 64.9k</span>
+                     <span>🔁 44.4k</span>
+                     <span>❤️ 109.8k</span>
+                     <span>📤</span>
+                 </div>
+             </div>
+         </div>
+         <!-- ✅ REPLIES TAB -->
+         <div class="content-section" id="replies-content">
+             <h2 style="font-size:1.3rem; font-weight:700; margin:1rem 0;">Let’s get you set up</h2>
+             <div class="setup-cards">
+                 <div class="card blue"><div class="card-icon">👤</div><div>Complete your profile</div></div>
+                 <div class="card orange"><div class="card-icon">💬</div><div>Follow 3 Topics</div></div>
+                 <div class="card purple"><div class="card-icon">📌</div><div>Follow accounts</div></div>
+             </div>
+             <div class="who-to-follow">
+                 <h2>Who to follow</h2>
+                 <div class="suggestion">
+                     <div class="suggestion-pic"><img src="https://picsum.photos/200/200?random=1" alt="Profile"></div>
+                     <div class="suggestion-info"><div class="suggestion-name">THE KIINE ✔</div><div class="suggestion-username">@asherrkiinee</div><div class="suggestion-bio">🛡 Fan account | Web3 | Giveaway</div></div>
+                     <button class="follow-btn">Follow</button>
+                 </div>
+             </div>
+         </div>
+         <!-- ✅ RANTS TAB -->
+         <div class="content-section" id="rants-content">
+             <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; color:#1da1f2;">💭 My Rants & Thoughts</h3>
+             <!-- RANT 1 -->
+             <div class="rant">
+                 <div class="rant-header">
+                     <span>📝 Random thought</span>
+                     <span>Today</span>
+                 </div>
+                 <p class="rant-text">
+                     "Sometimes you just feel tired, not because you did too much, but because you held on for too long. It’s okay to take a break and breathe."
+                 </p>
+             </div>
+             <!-- RANT 2 -->
+             <div class="rant">
+                 <div class="rant-header">
+                     <span>😤 Frustration</span>
+                     <span>2 days ago</span>
+                 </div>
+                 <p class="rant-text">
+                     "Why does everything have to be so complicated? Just when you think things are going smooth, something else comes up. Patience is really being tested."
+                 </p>
+             </div>
+             <!-- RANT 3 -->
+             <div class="rant">
+                 <div class="rant-header">
+                     <span>📝 All about OAD</span>
+                     <span>2 days ago</span>
+                 </div>
+                 <p class="rant-text">
+                     It is the art of keeping an organization running efficiently. It covers managing records, communications, schedules, and office resources. It teaches you practical, transferable skills that open doors to stable jobs in every industry — from private companies to government offices. It is a field that builds responsibility, organization, and professionalism, making it a solid start for a successful career.
+                 </p>
+             </div>
+         </div>
+         <!-- ✅ ABOUT ME TAB -->
+         <div class="content-section" id="about-content">
+             <div class="about-content">
+                 <p>✨ <strong>Welcome to my profile!</strong> It’s great to have you here.</p>
+                 <h3>🎯 Interests & Hobbies</h3>
+                 <p>I love watching anime, K-dramas, and vlogs. I enjoy reading books and stories on Wattpad. I also love to sing, dance, eat good food, and sleep all day!</p>
+                 <h3>🎓 Educational Background</h3>
+                 <p><strong>Elementary:</strong> Guija Sabang West Elementary School<br>
+                 <strong>High School:</strong> Antique Vocational School<br>
+                 <strong>Senior High School:</strong> Saint Joseph Academy<br>
+                 <strong>College:</strong> University of Antique - Main Campus</p>
+                 <h3>🚀 Career Goals</h3>
+                 <p>Finish my studies with excellence, build a stable career, grow personally, help my family, and share my creativity with the world.</p>
+             </div>
+         </div>
+         <!-- ✅ MEDIA TAB -->
+         <div class="content-section" id="media-content">
+             <div class="media-grid">
+                 <div class="media-item" onclick="openZoom('L6.jpg')"><img src="L6.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L13.jpg')"><img src="L13.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L3.jpg')"><img src="L3.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L4.jpg')"><img src="L4.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L5.jpg')"><img src="L5.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L10.jpg')"><img src="L10.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L9.jpg')"><img src="L9.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L14.jpg')"><img src="L14.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L8.jpg')"><img src="L8.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L2.jpg')"><img src="L2.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L1.jpg')"><img src="L1.jpg" alt="Media"></div>
+                 <div class="media-item" onclick="openZoom('L11.jpg')"><img src="L11.jpg" alt="Media"></div>
+             </div>
+         </div>
+         <!-- ✅ ONLY ME TAB -->
+         <div class="content-section" id="onlyme-content">
+             <div class="only-me-box">
+                 <div class="only-me-icon">🔒</div>
+                 <h3>Only Me</h3>
+                 <p style="margin-top: 0.5rem;">This section is private and visible only to you.</p>
+                 <p style="font-size:0.9rem; margin-top:1rem;">No private notes or entries yet.</p>
+             </div>
+         </div>
+     </div>
+     <!-- Zoom Modal -->
+     <div id="imageModal" class="modal" onclick="closeZoom()">
+         <span class="close" onclick="closeZoom()">&times;</span>
+         <img class="modal-content" id="zoomedImage">
+     </div>
+     <!-- Bottom Nav -->
+     <div class="bottom-nav">
+         <div class="nav-icon">🏠</div>
+         <div class="nav-icon">🔍</div>
+         <div class="nav-icon">✎</div>
+         <div class="nav-icon">🔔 <span class="badge">1</span></div>
+         <div class="nav-icon">💬</div>
+     </div>
+     <div class="tweet-btn">✎</div>
+     <script>
+         const tabs = document.querySelectorAll('.tab');
+         const sections = document.querySelectorAll('.content-section');
+         const pageTitle = document.getElementById('pageTitle');
+         const tabTitles = {
+             posts: "Posts",
+             replies: "Replies",
+             rants: "Rants",
+             about: "About Me",
+             media: "Media",
+             onlyme: "Only Me"
+         };
+         tabs.forEach(tab => {
+             tab.addEventListener('click', () => {
+                 tabs.forEach(t => t.classList.remove('active'));
+                 sections.forEach(s => s.classList.remove('active'));
+                 tab.classList.add('active');
+                 const tabName = tab.dataset.tab;
+                 document.getElementById(`${tabName}-content`).classList.add('active');
+                 pageTitle.textContent = tabTitles[tabName];
+             });
+         });
+         function triggerCoverUpload() {
+             document.getElementById('coverInput').click();
+         }
+         document.getElementById('coverInput').addEventListener('change', function(e) {
+             const file = e.target.files[0];
+             if (file) {
+                 const reader = new FileReader();
+                 reader.onload = event => document.getElementById('coverImage').src = event.target.result;
+                 reader.readAsDataURL(file);
+             }
+         });
+         const modal = document.getElementById("imageModal");
+         const modalImg = document.getElementById("zoomedImage");
+         function openZoom(imgSrc) {
+             modal.style.display = "block";
+             modalImg.src = imgSrc;
+             document.body.style.overflow = "hidden";
+         }
+         function closeZoom() {
+             modal.style.display = "none";
+             document.body.style.overflow = "auto";
+         }
+         document.addEventListener('keydown', e => {
+             if (e.key === "Escape") closeZoom();
+         });
+         document.getElementById('setupBtn').addEventListener('click', () => alert('Open profile setup'));
+         document.getElementById('verifyBtn').addEventListener('click', () => alert('Open verification'));
+         document.querySelector('.tweet-btn').addEventListener('click', () => alert('Compose new post'));
+     </script>
+ </body>
+ </html>

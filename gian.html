@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gian Marion Fabon (@gianfabs) / X</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            padding-bottom: 70px;
+        }
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            border-bottom: 1px solid #e1e8ed;
+            z-index: 100;
+        }
+        .back-btn {
+            font-size: 1.3rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: #000;
+        }
+        .top-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .search-icon {
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+        /* Cover Photo */
+        .banner {
+            height: 120px;
+            background-color: #e1e8ed;
+            position: relative;
+            overflow: hidden;
+        }
+        .banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .change-cover-btn {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+        #coverInput { display: none; }
+        /* Profile Header */
+        .profile-header {
+            padding: 0 1rem;
+            position: relative;
+            margin-top: -4rem;
+        }
+        .profile-pic {
+            width: clamp(100px, 25vw, 120px);
+            height: clamp(100px, 25vw, 120px);
+            border-radius: 50%;
+            border: 4px solid #fff;
+            background: #e1e8ed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .setup-btn {
+            position: absolute;
+            top: 0;
+            right: 1rem;
+            border: 1px solid #ccd6dd;
+            background: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .profile-name {
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.2rem;
+        }
+        .verified-badge {
+            background: #1da1f2;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+        }
+        .username, .contact {
+            color: #657786;
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+        .stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .stats span { font-weight: 600; }
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e1e8ed;
+            overflow-x: auto;
+        }
+        .tab {
+            flex: 0 0 auto;
+            min-width: 75px;
+            padding: 1rem 0.6rem;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            color: #657786;
+            cursor: pointer;
+            text-align: center;
+        }
+        .tab.active {
+            color: #000;
+            font-weight: 600;
+            border-bottom: 3px solid #1da1f2;
+        }
+        /* Content Sections */
+        .content-area { padding: 1rem; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        /* Post Style */
+        .post {
+            border: 1px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.8rem;
+        }
+        .post-profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e1e8ed;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .post-profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .post-user-info h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .post-user-info p {
+            font-size: 0.85rem;
+            color: #657786;
+        }
+        .post-caption {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+            color: #000;
+        }
+        .post-image {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 0.8rem;
+            background: #e1e8ed;
+            text-align: center;
+        }
+        .post-image img, .post-image video {
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .post-actions {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: #657786;
+        }
+        /* Rants Style */
+        .rant {
+            border: 1px solid #ffebee;
+            background: #fff8f9;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .rant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+            color: #c62828;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .rant-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #222;
+        }
+        /* Only Me Style */
+        .only-me-box {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #657786;
+        }
+        .only-me-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+        /* About Me, Media, Others */
+        .about-content { line-height: 1.8; font-size: 1rem; color: #333; }
+        .about-content h3 { font-size: 1.1rem; font-weight: 700; margin: 1.2rem 0 0.5rem; color: #000; }
+        .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 0.5rem; }
+        .media-item { aspect-ratio: 1/1; background: #e1e8ed; overflow: hidden; cursor: pointer; }
+        .media-item img { width: 100%; height: 100%; object-fit: cover; }
+        .setup-cards { display: flex; gap: 0.75rem; margin: 1rem 0 2rem; overflow-x: auto; }
+        .card { min-width: 140px; height: 120px; border-radius: 12px; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 600; text-align: center; padding: 0.5rem; }
+        .card.blue { background: linear-gradient(135deg, #0099cc, #33ccff); }
+        .card.orange { background: linear-gradient(135deg, #ff9933, #ffcc33); }
+        .card.purple { background: linear-gradient(135deg, #9966ff, #cc66ff); }
+        .who-to-follow h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+        .suggestion { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid #e1e8ed; }
+        .suggestion-pic { width: 48px; height: 48px; border-radius: 50%; background: #e1e8ed; overflow: hidden; cursor: pointer; flex-shrink: 0; }
+        .suggestion-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .suggestion-info { flex: 1; }
+        .suggestion-name { font-weight: 700; font-size: 0.95rem; }
+        .suggestion-username { font-size: 0.9rem; color: #657786; margin: 0.2rem 0; }
+        .suggestion-bio { font-size: 0.85rem; color: #333; line-height: 1.4; }
+        .follow-btn { background: #000; color: #fff; border: none; padding: 0.5rem 1.1rem; border-radius: 9999px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid #e1e8ed;
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem 0;
+        }
+        .nav-icon { font-size: 1.4rem; cursor: pointer; position: relative; }
+        .badge { position: absolute; top: -5px; right: -8px; background: #1da1f2; color: white; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 9999px; }
+        .tweet-btn { position: fixed; bottom: 5rem; right: 1rem; width: 55px; height: 55px; border-radius: 50%; background: #1da1f2; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        /* Zoom Modal */
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); padding: 1rem; }
+        .modal-content { margin: auto; display: block; max-width: 90%; max-height: 90vh; object-fit: contain; }
+        .close { position: absolute; top: 1rem; right: 1.5rem; color: #fff; font-size: 2.5rem; font-weight: bold; cursor: pointer; }
+        @media (max-width: 480px) { .setup-btn { position: static; margin: 0.5rem 0; width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="X_Password.html" class="back-btn">←</a>
+        <div class="top-title" id="pageTitle">Posts</div>
+        <div class="search-icon">🔍</div>
+    </div>
+
+    <!-- Cover Photo -->
+    <div class="banner" id="coverContainer">
+        <img id="coverImage" src="cover1.jpg" alt="Cover Photo">
+        <button class="change-cover-btn" onclick="triggerCoverUpload()">Change cover</button>
+        <input type="file" id="coverInput" accept="image/*">
+    </div>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-pic" onclick="openZoom('gianprofile.jpg')">
+            <img src="gianprofile.jpg" alt="Profile Picture">
+        </div>
+        <button class="setup-btn" id="setupBtn">Set up profile</button>
+        <div class="profile-name">
+            Gian Marion Fabon
+            <span class="verified-badge" id="verifyBtn">Get verified</span>
+        </div>
+        <div class="username">@gianfabs</div>
+        <div class="contact">- BSOA - 2B</div>
+        <div class="contact">- 09536916079</div>
+        <div class="contact">- gianlance306@gmail.com</div>
+        <br>
+        <div class="stats">
+            <div><span>1</span> Following</div>
+            <div><span>52.8k</span> Followers</div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" data-tab="posts">Posts</div>
+        <div class="tab" data-tab="replies">Replies</div>
+        <div class="tab" data-tab="rants">Rants</div>
+        <div class="tab" data-tab="about">About Me</div>
+        <div class="tab" data-tab="media">Media</div>
+        <div class="tab" data-tab="onlyme">Only Me</div>
+    </div>
+
+    <div class="content-area">
+
+        <!-- ✅ POSTS TAB -->
+        <div class="content-section active" id="posts-content">
+            <!-- POST 1 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="gianprofile.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Gian Fabon</h4>
+                        <p>@gianfabs · 1h</p>
+                    </div>
+                </div>
+                <p class="post-caption">✨ First portrait</p>
+                <div class="post-image" onclick="openZoom('G1.jpg')">
+                    <img src="G1.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 3.8k</span>
+                    <span>🔁 1.8k</span>
+                    <span>❤️ 12k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+
+            <!-- POST 2 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="gianprofile.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Gian Fabon</h4>
+                        <p>@gianfabs · 1h</p>
+                    </div>
+                </div>
+                <p class="post-caption">✨ charcoal & graphite</p>
+                <div class="post-image" onclick="openZoom('G3.jpg')">
+                    <img src="G3.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 3.8k</span>
+                    <span>🔁 1.8k</span>
+                    <span>❤️ 12k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+
+            <!-- VIDEO POST -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="gianprofile.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Gian Fabon</h4>
+                        <p>@gianfabs · 1d</p>
+                    </div>
+                </div>
+                <p class="post-caption">chill drawing</p></p>
+                <div class="post-image" onclick="openZoom('F1.mp4')">
+                    <video 
+                        class="feed-video"
+                        src="F1.mp4" 
+                        controls 
+                        muted 
+                        loop 
+                        playsinline 
+                        preload="metadata"
+                        style="width: 100%; height: auto; border-radius: 8px;">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="post-actions">
+                    <span>💬 654.9k</span>
+                    <span>🔁 104.4k</span>
+                    <span>❤️ 500.8k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+
+            <!-- POST 3 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="gianprofile.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Gian Fabon</h4>
+                        <p>@gianfabs · 3h</p>
+                    </div>
+                </div>
+                <p class="post-caption">️ my "multo" isn't a person. it's the drawings i abandoned halfway because i wasn't satisfied with how they were turning out.</p>
+                <div class="post-image" onclick="openZoom('G4.jpg')">
+                    <img src="G4.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 5.9k</span>
+                    <span>🔁 2k</span>
+                    <span>❤️ 10.2k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+
+            <!-- POST 4 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="gianprofile.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Gian Fabon</h4>
+                        <p>@gianfabs · 1d</p>
+                    </div>
+                </div>
+                <p class="post-caption">on progress</p>
+                <div class="post-image" onclick="openZoom('G5.jpg')">
+                    <img src="G5.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 789</span>
+                    <span>🔁 2.4k</span>
+                    <span>❤️ 9.1k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+
+            <!-- POST 5 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-profile-pic">
+                        <img src="gianprofile.jpg" alt="Profile">
+                    </div>
+                    <div class="post-user-info">
+                        <h4>Gian Fabon</h4>
+                        <p>@gianfabs · 1d</p>
+                    </div>
+                </div>
+                <p class="post-caption">New charcoal pencil</p>
+                <div class="post-image" onclick="openZoom('G7.jpg')">
+                    <img src="G7.jpg" alt="Post photo">
+                </div>
+                <div class="post-actions">
+                    <span>💬 789</span>
+                    <span>🔁 2.4k</span>
+                    <span>❤️ 9.1k</span>
+                    <span>📤</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ REPLIES TAB -->
+        <div class="content-section" id="replies-content">
+            <h2 style="font-size:1.3rem; font-weight:700; margin:1rem 0;">Let’s get you set up</h2>
+            <div class="setup-cards">
+                <div class="card blue"><div class="card-icon">👤</div><div>Complete your profile</div></div>
+                <div class="card orange"><div class="card-icon">💬</div><div>Follow 3 Topics</div></div>
+                <div class="card purple"><div class="card-icon">📌</div><div>Follow accounts</div></div>
+            </div>
+            <div class="who-to-follow">
+                <h2>Who to follow</h2>
+                <div class="suggestion">
+                    <div class="suggestion-pic"><img src="https://picsum.photos/200/200?random=1" alt="Profile"></div>
+                    <div class="suggestion-info"><div class="suggestion-name">THE KIINE ✔</div><div class="suggestion-username">@asherrkiinee</div><div class="suggestion-bio">🛡 Fan account | Web3 | Giveaway</div></div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ RANTS TAB -->
+        <div class="content-section" id="rants-content">
+            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; color:#c62828;">💭 My Rants & Thoughts</h3>
+
+            <!-- RANT 1 -->
+            <div class="rant">
+                <div class="rant-header">
+                    <span>📝 Random thought</span>
+                    <span>Today</span>
+                </div>
+                <p class="rant-text">
+                    "Drawn from how I feel right now. I showed up, I practiced, I tried my best every single day. But it still feels like it’s never enough. Hard work doesn’t always feel like it pays off, and that’s the frustrating part. Not giving up, but definitely wondering if the bar is just set too high."
+                </p>
+            </div>
+
+            <!-- RANT 2 -->
+            <div class="rant">
+                <div class="rant-header">
+                    <span>😤 Frustration</span>
+                    <span>2 days ago</span>
+                </div>
+                <p class="rant-text">
+                    "Trying to draw what I imagine… But my skills are still playing catch-up. So many eraser marks, so many redos. It feels like I’m stuck in the same spot forever. Frustrating as hell, but I can’t bring myself to stop."
+                </p>
+            </div>
+
+            <!-- RANT 3 -->
+            <div class="rant">
+                <div class="rant-header">
+                    <span>📝 Why I draw too much</span>
+                    <span>2 days ago</span>
+                </div>
+                <p class="rant-text">
+                    Because it’s the only way I can put what’s inside my head into something real. When words aren’t enough, my pencil does the talking. It’s my escape, my way to process everything — even the frustration, the tiredness, the confusion. I draw too much because if I stop, all those thoughts just stay stuck inside me. It’s hard, it’s messy, but it’s the only thing that feels truly mine.
+                </p>
+            </div>
+        </div>
+
+        <!-- ✅ ABOUT ME TAB -->
+        <div class="content-section" id="about-content">
+            <div class="about-content">
+                <p>✨ <strong>Welcome to my profile!</strong> It’s great to have you here.</p>
+                <h3>🎯 Interests & Hobbies</h3>
+                <p>I love to draw portraits, graphite, charcoal. I enjoy playing online games.</p>
+                <h3>🎓 Educational Background</h3>
+                <p><strong>Elementary:</strong> Tigbao Elementary School<br>
+                <strong>High School:</strong> Tigbao High School<br>
+                <strong>Senior High School:</strong> Good Shepherd Academy<br>
+                <strong>College:</strong> University of Antique - Main Campus</p>
+                <h3>🚀 Career Goals</h3>
+                <p>Finish my studies with excellence, build a stable career, grow personally, help my family, and share my creativity with the world.</p>
+            </div>
+        </div>
+
+        <!-- ✅ MEDIA TAB -->
+        <div class="content-section" id="media-content">
+            <div class="media-grid">
+                <div class="media-item" onclick="openZoom('G1.jpg')"><img src="G1.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G3.jpg')"><img src="G3.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G2.jpg')"><img src="G2.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G4.jpg')"><img src="G4.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G5.jpg')"><img src="G5.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G6.jpg')"><img src="G6.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G7.jpg')"><img src="G7.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G8.jpg')"><img src="G8.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G9.jpg')"><img src="G9.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G10.jpg')"><img src="G10.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G11.jpg')"><img src="G11.jpg" alt="Media"></div>
+                <div class="media-item" onclick="openZoom('G12.jpg')"><img src="G12.jpg" alt="Media"></div>
+            </div>
+        </div>
+
+        <!-- ✅ ONLY ME TAB -->
+        <div class="content-section" id="onlyme-content">
+            <div class="only-me-box">
+                <div class="only-me-icon">🔒</div>
+                <h3>Only Me</h3>
+                <p style="margin-top: 0.5rem;">This section is private and visible only to you.</p>
+                <p style="font-size:0.9rem; margin-top:1rem;">No private notes or entries yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zoom Modal -->
+    <div id="imageModal" class="modal" onclick="closeZoom()">
+        <span class="close" onclick="closeZoom()">&times;</span>
+        <img class="modal-content" id="zoomedImage">
+        <video class="modal-content" id="zoomedVideo" style="display: none;" controls autoplay playsinline></video>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-icon">🔍</div>
+        <div class="nav-icon">✎</div>
+        <div class="nav-icon">🔔 <span class="badge">1</span></div>
+        <div class="nav-icon">💬</div>
+    </div>
+    <div class="tweet-btn">✎</div>
+
+    <script>
+        // --- TAB SWITCHING FIX ---
+        const tabs = document.querySelectorAll('.tab');
+        const sections = document.querySelectorAll('.content-section');
+        const pageTitle = document.getElementById('pageTitle');
+        const tabTitles = {
+            posts: "Posts",
+            replies: "Replies",
+            rants: "Rants",
+            about: "About Me",
+            media: "Media",
+            onlyme: "Only Me"
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                const tabName = tab.dataset.tab;
+                document.getElementById(`${tabName}-content`).classList.add('active');
+                pageTitle.textContent = tabTitles[tabName];
+            });
+        });
+
+        // --- Cover Photo Upload ---
+        function triggerCoverUpload() {
+            document.getElementById('coverInput').click();
+        }
+        document.getElementById('coverInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = event => document.getElementById('coverImage').src = event.target.result;
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // --- Zoom Modal (supports images & videos) ---
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("zoomedImage");
+        const modalVideo = document.getElementById("zoomedVideo");
+
+        function openZoom(mediaSrc) {
+            modal.style.display = "block";
+            document.body.style.overflow = "hidden";
+
+            if (mediaSrc.endsWith('.mp4') || mediaSrc.endsWith('.webm')) {
+                modalImg.style.display = "none";
+                modalVideo.style.display = "block";
+                modalVideo.src = mediaSrc;
+                modalVideo.play().catch(() => {});
+            } else {
+                modalVideo.style.display = "none";
+                modalImg.style.display = "block";
+                modalImg.src = mediaSrc;
+            }
+        }
+
+        function closeZoom() {
+            modal.style.display = "none";
+            document.body.style.overflow = "auto";
+            modalVideo.pause();
+            modalVideo.src = "";
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === "Escape") closeZoom(); });
+
+        // --- Video Auto-play when visible, pause when scrolled away ---
+        let soundUnlocked = false;
+        document.addEventListener('click', () => {
+            if (!soundUnlocked) {
+                soundUnlocked = true;
+                const tempAudio = new Audio();
+                tempAudio.play().catch(() => {});
+            }
+        }, { once: true });
+
+        const videos = document.querySelectorAll('.feed-video');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    video.play().catch(() => {});
+                    if (soundUnlocked) video.muted = false;
+                } else {
+                    video.pause();
+                }
+            });
+        }, { threshold: 0.6 });
+
+        videos.forEach(video => observer.observe(video));
+
+        // --- Other buttons ---
+        document.getElementById('setupBtn').addEventListener('click', () => alert('Open profile setup'));
+        document.getElementById('verifyBtn').addEventListener('click', () => alert('Open verification'));
+        document.querySelector('.tweet-btn').addEventListener('click', () => alert('Compose new post'));
+    </script>
+
+</body>
+</html>
